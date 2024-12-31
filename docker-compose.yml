@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest  # Usa la última versión de la imagen de PostgreSQL
+    container_name: postgres_server  # Nombre del contenedor para facilitar su identificación
+    environment:  # Variables de entorno para configurar PostgreSQL
+      POSTGRES_USER: django  # Usuario de la base de datos
+      POSTGRES_PASSWORD: django  # Contraseña del usuario
+      POSTGRES_DB: django  # Nombre de la base de datos
+    ports:
+      - "5432:5432"  # Mapea el puerto 5432 del contenedor al puerto 5432 de la máquina host
+    volumes:
+      - postgres_data_ramos_uc_legacy:/var/lib/postgresql/data  # Volumen persistente con el nuevo nombre
+
+volumes:
+  postgres_data_ramos_uc_legacy:
+    driver: local  # Volumen local para persistir los datos

@@ -26,7 +26,7 @@ class Command(BaseCommand):
             raise CommandError("Invalid action.")
 
         period = options["period"]
-        if not re.match("\d{4}-[012]", period):
+        if not re.match("\d{4}-[123]", period):
             raise CommandError("Period must follow format YYYY-S")
 
         db_settings = getattr(settings, "DATABASES")["default"]

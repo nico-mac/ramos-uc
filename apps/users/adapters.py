@@ -11,12 +11,12 @@ class UCAccountAdapter(DefaultAccountAdapter):
 
 class UCSocialAccountAdapter(DefaultSocialAccountAdapter):
     def is_open_for_signup(self, request, account):
-        return True if re.match(r".+[@\.]p?uc\.cl", user_email(account.user)) else False
+        return True
 
     def populate_user(self, request, sociallogin, data):
         user = sociallogin.user
         user.email = data.get("email")
         user.username = user.email.split("@")[0]
-        user.first_name = data.get("first_name")
-        user.last_name = data.get("last_name")
+        user.first_name = data.get("first_name", "nada")
+        user.last_name = data.get("last_name", "nada")
         return user

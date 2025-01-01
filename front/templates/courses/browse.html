@@ -5,13 +5,23 @@
 
 {% block main %}
 {% cache 86400 schools %}
+<section>
+    <h2>Ramos por areas de OFG</h2>
+    <table class="table mt-3">
+    {% for s in areas %}
+        <tr><td><a href="{% url 'courses:browse' %}?area={{s}}">{{s}}</a></td></tr>
+    {% endfor %}
+    </table>
+</section>
+<section>
+    <h2>Ramos por escuela</h2>
+    <table class="table mt-3">
+    {% for s in schools %}
+        <tr><td><a href="{% url 'courses:browse' %}?escuela={{s}}">{{s}}</a></td></tr>
+    {% endfor %}
+    </table>
 
-<h2>Ramos por escuela</h2>
-<table class="table mt-3">
-{% for s in schools %}
-    <tr><td><a href="{% url 'courses:browse' %}?escuela={{s}}">{{s}}</a></td></tr>
-{% endfor %}
-</table>
+</section>
 
 {% endcache %}
 {% endblock %}

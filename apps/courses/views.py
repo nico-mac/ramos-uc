@@ -308,8 +308,9 @@ def schedule(request, id):
 @cache_control(private=True, max_age=3600 * 24)
 def browse(request):
     school_name = request.GET.get("escuela", None)
+    area_name = request.GET.get("area", None)
 
-    # Case single school
+    # Caso: Filtro por escuela
     if school_name is not None:
         courses = Course.objects.filter(school=school_name).order_by("initials")
         paginator = Paginator(courses, 50)
@@ -322,10 +323,24 @@ def browse(request):
                 "school_name": school_name,
             },
         )
+    
+    # Caso: Filtro por área
+    elif area_name is not None:
+        courses = Course.objects.filter(area=area_name).order_by("initials")
+        paginator = Paginator(courses, 50)
+        page_number = request.GET.get("page")
+        return render(
+            request,
+            "courses/school.html",
+            {
+                "courses_page": paginator.get_page(page_number),
+                "school": area_name,
+            },
+        )
 
+    # Caso por defecto: Página principal sin filtro
     data = cache.get_or_set("possible_values", get_fields_values, 3600 * 12)
     return render(request, "courses/browse.html", data)
-
 
 # Search
 @cache_control(private=True, max_age=3600)

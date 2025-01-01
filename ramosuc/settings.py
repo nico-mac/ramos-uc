@@ -140,8 +140,10 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 AUTH_USER_MODEL = "users.User"
-LOGIN_URL = "/cuentas/google/login"
-LOGIN_REDIRECT_URL = os.getenv("LOGIN_REDIRECT_URL", "/")
+ACCOUNT_LOGIN_ON_SUCCESS = 'allauth.socialaccount.providers.google.views.login'
+LOGIN_URL = "/"
+LOGIN_REDIRECT_URL = "/"
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
 # AllAuth
 SOCIALACCOUNT_ADAPTER = "apps.users.adapters.UCSocialAccountAdapter"

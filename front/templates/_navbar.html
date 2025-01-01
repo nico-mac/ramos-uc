@@ -36,7 +36,12 @@
                     <a class="nav-link me-lg-1 me-3" href="#">{{ user.username }}</a>
                     <a class="btn btn-secondary" style="font-size: 1.2rem;" href="{% url 'account_logout' %}">Salir</a>
                     {% else %}
-                    <a class="btn btn-secondary" style="font-size: 1.2rem;" href="{% provider_login_url "google" %}">Ingresar</a>
+                    <form method="post" action="{% provider_login_url 'google' %}" class="d-flex justify-content-center w-100 mt-4">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 px-4 rounded-pill shadow-sm">
+                            Iniciar sesión con Google
+                        </button>
+                    </form>
                     {% endif %}
                 </div>
             </ul>

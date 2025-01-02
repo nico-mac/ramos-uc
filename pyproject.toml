@@ -17,6 +17,7 @@ django-background-tasks = "^1.2.5"
 requests = "^2.32.3"
 pyjwt = "2.10"
 cryptography = "^44.0.0"
+whitenoise = "^6.8.2"
 
 [tool.poetry.dev-dependencies]
 black = "^22.12"

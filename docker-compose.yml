@@ -27,7 +27,6 @@ services:
     command: sh -c "cd /code/front/assets && npm install && npm run build"
     volumes:
       - .:/code
-
   postgres:
     image: postgres:latest  # Usa la última versión de la imagen de PostgreSQL
     container_name: postgres_server  # Nombre del contenedor para facilitar su identificación

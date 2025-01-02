@@ -53,6 +53,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = "ramosuc.urls"
@@ -120,10 +122,12 @@ USE_TZ = True
 
 # Static and media files
 STATIC_URL = "/dist/"
-STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join( BASE_DIR , "static")
+
 STATICFILES_DIRS = [
-    BASE_DIR / "front" / "static",
-    BASE_DIR / "front" / "assets" / "dist",
+    os.path.join( BASE_DIR, "front", "static"),
+    os.path.join( BASE_DIR , "front", "assets", "dist"),
 ]
 
 MEDIA_URL = "/media/"

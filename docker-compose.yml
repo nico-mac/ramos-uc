@@ -1,19 +1,30 @@
 #version: '3.8'
 
 services:
+  caddy:
+    image: caddy
+    networks:
+      - caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh -c "python manage.py collectstatic --noinput &&
+         python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
       - ./static:/code/static
       - ./media:/code/media
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     environment:
-      - DEBUG=False
+      - DEBUG=True
       - PSQL_DB=django
       - PSQL_USER=django
       - PSQL_PASSWD=django
@@ -34,8 +45,6 @@ services:
       POSTGRES_USER: django  # Usuario de la base de datos
       POSTGRES_PASSWORD: django  # Contraseña del usuario
       POSTGRES_DB: django  # Nombre de la base de datos
-    ports:
-      - "5432:5432"  # Mapea el puerto 5432 del contenedor al puerto 5432 de la máquina host
     volumes:
       - postgres_data_ramos_uc_legacy:/var/lib/postgresql/data  # Volumen persistente con el nuevo nombre
 

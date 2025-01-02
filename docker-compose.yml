@@ -1,16 +1,4 @@
-#version: '3.8'
-
 services:
-  caddy:
-    image: caddy
-    networks:
-      - caddy
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
   web:
     build:
       context: .
@@ -21,8 +9,6 @@ services:
       - .:/code
       - ./static:/code/static
       - ./media:/code/media
-    # ports:
-    #   - "8000:8000"
     environment:
       - DEBUG=True
       - PSQL_DB=django
@@ -32,22 +18,51 @@ services:
     depends_on:
       - postgres
       - frontend
+    expose:
+      - "8000"  # Expuesto solo para la red interna, Nginx redirigirá al contenedor
+    networks:
+      - app_network
 
   frontend:
     image: node:14
     command: sh -c "cd /code/front/assets && npm install && npm run build"
     volumes:
       - .:/code
+    networks:
+      - app_network
+
   postgres:
-    image: postgres:latest  # Usa la última versión de la imagen de PostgreSQL
-    container_name: postgres_server  # Nombre del contenedor para facilitar su identificación
-    environment:  # Variables de entorno para configurar PostgreSQL
-      POSTGRES_USER: django  # Usuario de la base de datos
-      POSTGRES_PASSWORD: django  # Contraseña del usuario
-      POSTGRES_DB: django  # Nombre de la base de datos
+    image: postgres:latest
+    container_name: postgres_server
+    environment:
+      POSTGRES_USER: django
+      POSTGRES_PASSWORD: django
+      POSTGRES_DB: django
     volumes:
-      - postgres_data_ramos_uc_legacy:/var/lib/postgresql/data  # Volumen persistente con el nuevo nombre
+      - postgres_data_ramos_uc_legacy:/var/lib/postgresql/data
+    expose:
+      - "5432"  # Solo accesible dentro de la red de contenedores, no fuera
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    ports:
+      - "80:80"  # Puerto 8089 para el acceso externo
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certs:/etc/nginx/certs
+    depends_on:
+      - web
+      - frontend
+    networks:
+      - app_network
 
 volumes:
   postgres_data_ramos_uc_legacy:
-    driver: local  # Volumen local para persistir los datos
+    driver: local
+networks:
+  app_network:
+    driver: bridge

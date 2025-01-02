@@ -11,6 +11,7 @@ DEBUG = os.getenv("DEBUG") == "True"
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
+    "web",
 ]
 if os.getenv("HOSTNAME"):
     ALLOWED_HOSTS += [os.getenv("HOSTNAME")]

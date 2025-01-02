@@ -1,6 +1,33 @@
-version: '3.8'
+#version: '3.8'
 
 services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+      - ./static:/code/static
+      - ./media:/code/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - PSQL_DB=django
+      - PSQL_USER=django
+      - PSQL_PASSWD=django
+      - PSQL_HOST=postgres
+    depends_on:
+      - postgres
+      - frontend
+
+  frontend:
+    image: node:14
+    command: sh -c "cd /code/front/assets && npm install && npm run build"
+    volumes:
+      - .:/code
+
   postgres:
     image: postgres:latest  # Usa la última versión de la imagen de PostgreSQL
     container_name: postgres_server  # Nombre del contenedor para facilitar su identificación
